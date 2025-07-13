@@ -1,0 +1,105 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Flask instance folder (used for uploaded files, configs, etc.)
+instance/
+.env
+
+# Environment variables and secrets
+.env.*
+*.env
+
+# Flask/Machine learning app logs
+*.log
+
+# Virtual environment folders
+venv/
+ENV/
+env/
+.venv/
+.python-version
+
+# Mac system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Jupyter Notebook Checkpoints (if you use them for prototyping)
+.ipynb_checkpoints
+
+# Pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Build system
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# pyre
+.pyre/
+
+# pytype
+.pytype/
+
+# VS Code settings
+.vscode/
+
+# SQLite database and migration files
+*.sqlite3
+*.db
+*.bak
+*.sql
+*.dump
+
+# Alembic migration folder (can be ignored unless you want to track DB migrations)
+migrations/
+
+# Flask cache/session files (if using filesystem session interface)
+flask_session/
+
+# Node modules (if you use frontend tools)
+node_modules/
+*.lock
+
+# Zip files of reports/certificates/exported data (generated output)
+*.zip
+
+# Static/media uploads (optional, only ignore if dynamically generated)
+uploads/
+static/results/
+static/exports/
