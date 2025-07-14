@@ -1,32 +1,22 @@
-from flask import Flask, render_template, url_for, request, redirect, flash, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, logout_user, login_required, current_user
+# app.py
+from flask import Flask, render_template, url_for, request, redirect, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 import bcrypt
+
+from models import db, Users  # ✅ Import from models.py
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///attendance.db'
 app.config['SECRET_KEY'] = "THIS IS A SECRET KEY"
-db = SQLAlchemy(app)
+
+db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-class Users(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.String(20), nullable=False, default='teacher')
-
-    def __init__(self, username, email, password, role='teacher'):
-        self.username = username
-        self.email = email
-        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        self.role = role
-
 with app.app_context():
-        db.create_all()
+    db.create_all()
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -48,7 +38,7 @@ def register():
             flash('Email already registered.', 'warning')
             return redirect(url_for('register'))
 
-        new_user = Users(username=username,email=email, password=password, role=role)
+        new_user = Users(username=username, email=email, password=password, role=role)
         db.session.add(new_user)
         db.session.commit()
         flash('Registration successful. Please login.', 'success')
