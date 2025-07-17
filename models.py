@@ -1,7 +1,7 @@
-# models.py, trying sommething..lets see
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 import bcrypt
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -17,3 +17,32 @@ class Users(db.Model, UserMixin):
         self.email = email
         self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         self.role = role
+
+# Table for classes
+class Class(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    branch = db.Column(db.String(50), nullable=False)
+    year = db.Column(db.String(10), nullable=False)
+
+# Table for students
+class Student(db.Model):
+    rollno = db.Column(db.String(20), primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+
+# Table for sessions
+class ClassSession(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    class_id = db.Column(db.Integer, db.ForeignKey('class.id'), nullable=False)
+    subject = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+    num_present = db.Column(db.Integer, nullable=False) 
+class Record(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    session_id = db.Column(db.Integer, db.ForeignKey('class_session.id'), nullable=False)
+    student_rollno = db.Column(db.String(20), db.ForeignKey('student.rollno'), nullable=False)
+    status = db.Column(db.String(10), nullable=False)  # 'Present' or 'Absent'
+
+    session = db.relationship('ClassSession', backref='records')
+    student = db.relationship('Student', backref='records')
