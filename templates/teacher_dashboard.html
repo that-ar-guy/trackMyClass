@@ -1,0 +1,59 @@
+<!-- templates/teacher_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ current_user.username }}!</h2>
+
+    <!-- Class selection form -->
+    <form method="POST">
+        <label for="branch">Select Branch:</label>
+        <select name="branch" required>
+            <option value="">-- Select Branch --</option>
+            {% for branch in branches %}
+                <option value="{{ branch }}" {% if request.form.branch == branch %}selected{% endif %}>{{ branch }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="year">Select Year:</label>
+        <select name="year" required>
+            <option value="">-- Select Year --</option>
+            {% for year in years %}
+                <option value="{{ year }}" {% if request.form.year == year %}selected{% endif %}>{{ year }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Show Students</button>
+    </form>
+
+    {% if students %}
+        <h3>Mark Attendance for {{ request.form.branch }} - {{ request.form.year }}</h3>
+
+        <!-- Attendance submission form -->
+        <form method="POST" action="{{ url_for('mark_attendance') }}">
+            <label for="subject">Subject:</label>
+            <input type="text" name="subject" required>
+
+            <!-- Hidden class_id to tie session to class -->
+            <input type="hidden" name="class_id" value="{{ students[0].class_id }}">
+
+            <ul>
+                {% for student in students %}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="present_students" value="{{ student.rollno }}">
+                            {{ student.rollno }} - {{ student.name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <button type="submit">Submit Attendance</button>
+        </form>
+    {% endif %}
+
+    <br><a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
