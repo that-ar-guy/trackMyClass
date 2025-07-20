@@ -70,7 +70,6 @@ def dashboard():
     if current_user.role == 'teacher':
         branches = db.session.query(Class.branch).distinct().all()
         years = db.session.query(Class.year).distinct().all()
-        print(branches)
         selected_branch = request.form.get('branch')
         selected_year = request.form.get('year')
         students = []
@@ -80,10 +79,19 @@ def dashboard():
             class_ids = [cls.id for cls in matched_classes]
             students = Student.query.filter(Student.class_id.in_(class_ids)).all()
 
+        # ✅ Fetch sessions for the logged-in teacher
+        sessions = ClassSession.query.filter_by(teacher_id=current_user.id).order_by(ClassSession.time.desc()).all()
+
+        # ✅ Create class_id-to-Class mapping
+        classes = Class.query.all()
+        class_lookup = {cls.id: f"{cls.branch} {cls.year}" for cls in classes}
+
         return render_template("teacher_dashboard.html", 
                                branches=[b[0] for b in branches], 
                                years=[y[0] for y in years], 
-                               students=students)
+                               students=students,
+                               sessions=sessions,
+                               class_lookup=class_lookup)
 
     return f"Welcome {current_user.username}"
 

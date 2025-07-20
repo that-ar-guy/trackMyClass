@@ -53,6 +53,28 @@
             <button type="submit">Submit Attendance</button>
         </form>
     {% endif %}
+    {% if sessions %}
+  <h3>Previous Attendance Sessions</h3>
+  <table border="1" cellpadding="5" cellspacing="0">
+    <tr>
+      <th>Class</th>
+      <th>Subject</th>
+      <th>No. of Students Present</th>
+      <th>Date & Time</th>
+    </tr>
+    {% for session in sessions %}
+      <tr>
+        <td>{{ class_lookup[session.class_id] }}</td>
+        <td>{{ session.subject }}</td>
+        <td>{{ session.num_present }}</td>
+        <td>{{ session.time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>No attendance sessions yet.</p>
+{% endif %}
+
 
     <br><a href="{{ url_for('logout') }}">Logout</a>
 </body>
